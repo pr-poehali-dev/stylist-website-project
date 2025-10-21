@@ -14,6 +14,7 @@ const Index = () => {
     email: '',
     message: ''
   });
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +27,16 @@ const Index = () => {
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const openLightbox = (image: string) => {
+    setLightboxImage(image);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeLightbox = () => {
+    setLightboxImage(null);
+    document.body.style.overflow = 'auto';
   };
 
   const services = [
@@ -172,13 +183,15 @@ const Index = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {portfolio.map((item, index) => (
               <Card key={index} className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow duration-300 animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
-                <div className="relative overflow-hidden group">
+                <div className="relative overflow-hidden group cursor-pointer" onClick={() => openLightbox(item.image)}>
                   <img 
                     src={item.image} 
                     alt={item.title}
                     className="w-full h-[400px] object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <Icon name="Expand" size={32} className="text-white" />
+                  </div>
                 </div>
                 <CardContent className="p-6">
                   <h4 className="text-xl font-serif font-semibold mb-2">{item.title}</h4>
@@ -308,6 +321,27 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {lightboxImage && (
+        <div 
+          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-fade-in"
+          onClick={closeLightbox}
+        >
+          <button 
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 text-white hover:text-accent transition-colors z-10"
+            aria-label="Закрыть"
+          >
+            <Icon name="X" size={32} />
+          </button>
+          <img 
+            src={lightboxImage} 
+            alt="Полноэкранный просмотр"
+            className="max-w-full max-h-full object-contain animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 };
