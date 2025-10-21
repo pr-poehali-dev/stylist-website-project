@@ -128,9 +128,9 @@ const Index = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="animate-fade-in">
               <img 
-                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600&h=800&fit=crop" 
+                src="https://cdn.poehali.dev/files/6d5585fd-2c38-4514-afdb-2bbae9ce80f3.JPG" 
                 alt="Анна Соколова" 
-                className="w-full h-[500px] object-cover"
+                className="w-full h-[500px] object-cover rounded-lg shadow-lg"
               />
             </div>
             <div className="space-y-6 animate-fade-in">
