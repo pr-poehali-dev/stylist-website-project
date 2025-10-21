@@ -73,7 +73,12 @@ const Index = () => {
       description: 'Стильные решения на каждый день'
     },
     {
-      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&h=1000&fit=crop',
+      image: 'https://cdn.poehali.dev/files/92e8a819-15ae-4ad3-a3a0-26553cd76128.JPG',
+      title: 'Романтический образ',
+      description: 'Утончённый стиль с кружевными акцентами'
+    },
+    {
+      image: 'https://cdn.poehali.dev/files/66cd84e5-83c9-4904-8597-6dc8bdf2818c.JPG',
       title: 'Вечерний образ',
       description: 'Роскошь для особых случаев'
     }
@@ -164,7 +169,7 @@ const Index = () => {
             <h3 className="text-5xl font-serif font-light mb-4">Портфолио</h3>
             <p className="text-lg text-muted-foreground">Примеры моих работ</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {portfolio.map((item, index) => (
               <Card key={index} className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow duration-300 animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
                 <div className="relative overflow-hidden group">
