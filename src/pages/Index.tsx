@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,7 @@ const Index = () => {
     message: ''
   });
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,8 +30,9 @@ const Index = () => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const openLightbox = (image: string) => {
+  const openLightbox = (image: string, index: number) => {
     setLightboxImage(image);
+    setCurrentImageIndex(index);
     document.body.style.overflow = 'hidden';
   };
 
@@ -38,6 +40,31 @@ const Index = () => {
     setLightboxImage(null);
     document.body.style.overflow = 'auto';
   };
+
+  const nextImage = () => {
+    const nextIndex = (currentImageIndex + 1) % portfolio.length;
+    setCurrentImageIndex(nextIndex);
+    setLightboxImage(portfolio[nextIndex].image);
+  };
+
+  const prevImage = () => {
+    const prevIndex = (currentImageIndex - 1 + portfolio.length) % portfolio.length;
+    setCurrentImageIndex(prevIndex);
+    setLightboxImage(portfolio[prevIndex].image);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (lightboxImage) {
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === 'Escape') closeLightbox();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxImage, currentImageIndex]);
 
   const services = [
     {
@@ -183,7 +210,7 @@ const Index = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {portfolio.map((item, index) => (
               <Card key={index} className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow duration-300 animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
-                <div className="relative overflow-hidden group cursor-pointer" onClick={() => openLightbox(item.image)}>
+                <div className="relative overflow-hidden group cursor-pointer" onClick={() => openLightbox(item.image, index)}>
                   <img 
                     src={item.image} 
                     alt={item.title}
@@ -334,6 +361,27 @@ const Index = () => {
           >
             <Icon name="X" size={32} />
           </button>
+
+          <button 
+            onClick={(e) => { e.stopPropagation(); prevImage(); }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-accent transition-colors bg-black/30 p-3 rounded-full hover:bg-black/50"
+            aria-label="Предыдущее фото"
+          >
+            <Icon name="ChevronLeft" size={32} />
+          </button>
+
+          <button 
+            onClick={(e) => { e.stopPropagation(); nextImage(); }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-accent transition-colors bg-black/30 p-3 rounded-full hover:bg-black/50"
+            aria-label="Следующее фото"
+          >
+            <Icon name="ChevronRight" size={32} />
+          </button>
+
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
+            {currentImageIndex + 1} / {portfolio.length}
+          </div>
+
           <img 
             src={lightboxImage} 
             alt="Полноэкранный просмотр"
